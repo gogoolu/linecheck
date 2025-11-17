@@ -80,21 +80,19 @@ int main(int argc, char** argv) {
         std::cerr << "Missing require arguments, dir or file path" << std::endl;
         return 1;
     }
-
-    fs::path path(argv[1]);
-
-    if (!fs::exists(path)) {
-        std::cerr << "The specified path does not exist: " << path << std::endl;
-        return 1;
+    for (int i = 1; i < argc; i++) {
+        fs::path path(argv[i]);
+        if (!fs::exists(path)) {
+            std::cerr << "The specified path does not exist: " << path << std::endl;
+        }
+        else if (fs::is_regular_file(path)) {
+            fix_file(path);
+        }
+        else if (fs::is_directory(path)) {
+            fix_directory(path);
+        } else {
+            std::cout << "The path is neither a regular file nor a directory: " << path << std::endl;
+        }
     }
-    if (fs::is_regular_file(path)) {
-        fix_file(path);
-    }
-    else if (fs::is_directory(path)) {
-        fix_directory(path);
-    } else {
-        std::cout << "The path is neither a regular file nor a directory: " << path << std::endl;
-    }
-    
     return 0;
 }
